@@ -1,11 +1,12 @@
-import type { NextPage } from "next";
+import React from "react";
+import Navbar from "../components/Nav/Nav";
+import Main from "../components/Main/Main";
 
 const Home = () => {
 	return (
 		<>
-			<div>
-				<span className="text text-9xl">Hi</span>
-			</div>
+			<Navbar />
+			<Main />
 		</>
 	);
 };

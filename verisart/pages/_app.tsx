@@ -1,11 +1,14 @@
 import "../css/styles.css";
 import type { AppProps } from "next/app";
+import { Web3ContextProvider } from "../context";
 
 const App = ({ Component, pageProps }: AppProps) => {
 	return (
-		<>
-			<Component {...pageProps} />
-		</>
+		<Web3ContextProvider>
+			<>
+				<Component {...pageProps} />
+			</>
+		</Web3ContextProvider>
 	);
 };
 
