@@ -51,7 +51,7 @@ export const useWeb3 = () => {
 							params: [{ chainId: "0x4" }],
 						});
 						console.log("You have switched to the right network");
-					} catch (switchError) {
+					} catch (switchError: any) {
 						// The network has not been added to MetaMask
 						if (switchError.code === 4902) {
 							console.log("Please add the Rinkeby network to MetaMask");

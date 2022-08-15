@@ -1,4 +1,4 @@
-.env
+.env.local
 node_modules/
 public/js/test.js
 views/main-page2.handlebars

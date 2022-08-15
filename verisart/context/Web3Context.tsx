@@ -4,7 +4,7 @@ import { Web3ProviderState, web3InitialState } from "../reducers";
 
 const Web3Context = createContext<Web3ProviderState>(web3InitialState);
 
-export const Web3ContextProvider = ({ children }) => {
+export const Web3ContextProvider = ({ children }: { children: any }) => {
 	const web3ProviderState = useWeb3();
 
 	return (

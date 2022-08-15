@@ -1,7 +1,7 @@
 import React from "react";
 import { useWeb3Context } from "../../context/";
 
-const ConnectButton = ({ connect }) => {
+const ConnectButton = ({ connect }: { connect: any }) => {
 	return connect ? (
 		<button onClick={connect}>Connect</button>
 	) : (
@@ -9,7 +9,7 @@ const ConnectButton = ({ connect }) => {
 	);
 };
 
-const DisconnectButton = ({ disconnect }) => {
+const DisconnectButton = ({ disconnect }: { disconnect: any }) => {
 	return disconnect ? (
 		<button onClick={disconnect}>Disconnect</button>
 	) : (
