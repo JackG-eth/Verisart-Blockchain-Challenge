@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Container from "../components/General/Container/Container";
-import { create, CID, IPFSHTTPClient } from "ipfs-http-client";
+import { create } from "ipfs-http-client";
 import ABIContract from "../public/mint.json";
-import { BigNumber, Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import { useWeb3Context } from "../context/";
 
 import { toast } from "react-toastify";
@@ -40,7 +40,7 @@ const Mint = () => {
 			setMinted(txResult.status === 1);
 		} catch (error) {
 			console.log(error);
-			toast("Either notmintedd or not connected!");
+			toast("Either not minted or not connected!");
 			setMinted(false);
 		}
 	};
@@ -72,16 +72,10 @@ const Mint = () => {
 	}
 
 	async function uploadImage() {
-		// save image
 		let ipfs = await ipfsClient();
 		const image = await ipfs.add(imageURL);
 		setImageIPFS("https://ipfs.io/ipfs/" + image.path);
 		setImageUrl("");
-		//check ipfs set correclty for image
-		// pass data to mint.
-		// work out what image path is, set it here then create a new object to parse as a json into new infura call
-		// on success set upload to false and mint to true.
-		// add modal for minting
 	}
 
 	async function saveFile() {

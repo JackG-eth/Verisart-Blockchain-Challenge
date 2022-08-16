@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
-import { Alchemy, Network } from "alchemy-sdk";
-import { useWeb3Context } from "../context/";
+import { useState, useEffect, useRef } from "react";
+import { NftExcludeFilters, Alchemy, Network } from "alchemy-sdk";
+import { useWeb3Context } from "../context";
 import Container from "../components/General/Container/Container";
+import { copyFileSync } from "fs";
+
+//Unfortunately alchemy's SDK does not support the getNftsForContract for rinkeby,functionality works on mainnet.
 const Collection = () => {
 	const [permList, setPerm] = useState([{}]);
 
@@ -21,15 +24,17 @@ const Collection = () => {
 	}
 
 	const nfts = async () => {
-		const stringAdd: string = address ? address : "";
-		if (address === "") {
-			//throw error here
-		}
-		// Get all NFTs
-		const nfts = await alchemy.nft.getNftsForOwner(stringAdd);
-		const nftList = nfts["ownedNfts"];
+		const contractAddress = "0x4dE3d62375fAe6CfDBdAFD15aDAB2dd98cBce084";
 
-		for (let nft of nftList) {
+		// Flag to omit metadata
+		const omitMetadata = false;
+
+		// Get all NFTs
+		const { nfts } = await alchemy.nft.getNftsForContract(contractAddress, {
+			omitMetadata: omitMetadata,
+		});
+
+		for (let nft of nfts) {
 			const metaData = {
 				id: nft.tokenId,
 				title: nft.rawMetadata?.title,
@@ -54,7 +59,7 @@ const Collection = () => {
 		<div>
 			<div>
 				<h1 className=" pt-24 text-center md:text-7xl lg:leading-tight">
-					Your Collection
+					Verisart Collection
 				</h1>
 			</div>
 			<div className="flex items-center justify-center text-center">
