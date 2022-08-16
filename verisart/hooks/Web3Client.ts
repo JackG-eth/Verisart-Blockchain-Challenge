@@ -59,7 +59,7 @@ export const useWeb3 = () => {
 						console.log("Cannot switch to the network");
 					}
 				}
-
+				toast.success("Connected Succesfully");
 				dispatch({
 					type: "SET_WEB3_PROVIDER",
 					provider,

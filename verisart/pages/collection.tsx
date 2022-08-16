@@ -1,42 +1,68 @@
 import { useState, useEffect, useRef } from "react";
-import BannerVideo from "../components/Main/BannerVideo";
-import ReactTypingEffect from "react-typing-effect";
+import { NftExcludeFilters, Alchemy, Network } from "alchemy-sdk";
+import { useWeb3Context } from "../context/";
+import { copyFileSync } from "fs";
 
 const Collection = () => {
-	const Main = useRef<HTMLElement>(null); // for video.
-	const [loaded, setLoaded] = useState(false);
-	const [videoCanPlay, setVideoCanPlay] = useState(false);
+	const list: [{}] = [{}];
+	const [fetched, setNfts] = useState(false);
+	let perm: [{}] = [{}];
 
-	useEffect(() => {
-		setLoaded(true);
-		setTimeout(() => {
-			setVideoCanPlay(true);
-		}, 1000);
-	}, []);
+	const config = {
+		apiKey: process.env.ALCHEMY_KEY,
+		network: Network.ETH_RINKEBY,
+	};
+	const alchemy = new Alchemy(config);
+	const { address } = useWeb3Context();
+
+	const nfts = async () => {
+		const stringAdd: string = address ? address : "";
+		if (address === "") {
+			//throw error here
+		}
+		// Get all NFTs
+		const nfts = await alchemy.nft.getNftsForOwner(stringAdd);
+		const nftList = nfts["ownedNfts"];
+
+		for (let nft of nftList) {
+			const metaData = {
+				id: nft.tokenId,
+				title: nft.rawMetadata?.title,
+				artist: nft.rawMetadata?.artist,
+				year: nft.rawMetadata?.year,
+				imagePath: nft.rawMetadata?.imagePath,
+			};
+			list.push(metaData);
+		}
+
+		if (list.length > 1) {
+			perm = list;
+			console.log(perm);
+		}
+		// Print NFTs
+		//console.log(nftList[0].rawMetadata);
+	};
 
 	return (
-		<section ref={Main} className="relative h-screen">
-			<div
-				id="home"
-				className="relative flex h-screen w-screen min-w-[320px] flex-col items-center justify-center "
-			>
-				<BannerVideo
-					loaded={loaded}
-					videoCanPlay={videoCanPlay}
-					setVideoCanPlay={setVideoCanPlay}
-				/>
-				<ReactTypingEffect
-					speed={200}
-					eraseDelay={2500}
-					className="w-screen min-w-[320px] pt-4  text-center text-[64px] leading-tight text-white"
-					text={[
-						"Mint Your Future",
-						"Verisart Connects Real to Digital",
-						"Head To Mint To Start",
-					]}
-				/>
+		<div className="flex h-screen items-center justify-center text-center text-lg text-white">
+			<div>
+				<button onClick={nfts}>Fetch Next Page</button>
 			</div>
-		</section>
+			<div>
+				{perm.length > 1 ? (
+					<>
+						{perm.map((nft: any) => {
+							return (
+								<div key={nft.id}>
+									<h2>id: {nft.title}</h2>
+									<hr />
+								</div>
+							);
+						})}
+					</>
+				) : null}
+			</div>
+		</div>
 	);
 };
 

@@ -1,13 +1,56 @@
 import { useState, useEffect, useRef } from "react";
 import Container from "../components/General/Container/Container";
 import { create, CID, IPFSHTTPClient } from "ipfs-http-client";
+import ABIContract from "../public/mint.json";
+import { BigNumber, Contract, ethers } from "ethers";
 import { useWeb3Context } from "../context/";
+
+import { toast } from "react-toastify";
 
 const Mint = () => {
 	const { address, web3Provider } = useWeb3Context();
+
+	const [title, setTitle] = useState("");
+	const [artist, setArtist] = useState("");
+	const [year, setYear] = useState(2022);
 	const [imageURL, setImageUrl] = useState("");
-	const [selectedImage, setSelectedImage] = useState(false);
-	const [uploadImage, UploadImage] = useState(false);
+	const [imageIPFS, setImageIPFS] = useState("");
+	const [nftPath, setNFTPath] = useState("");
+	const [approved, setApproved] = useState(false);
+
+	const mintContractAddress = "0x02fF80b4A2c4534Ec612cF196d13Cd89dFc51f36";
+
+	const mint = async () => {
+		try {
+			const signer = web3Provider?.getSigner();
+			let contract = await new ethers.Contract(
+				mintContractAddress,
+				ABIContract.mintABI,
+				signer
+			);
+			// Change this to the contract that is doing the swapping/burning
+			console.log(nftPath);
+			console.log(address);
+			const mint = await contract.mint(address, nftPat);
+			const txResult = await mint.wait();
+			if (txResult.status !== 1) {
+				throw new Error("Failed approve");
+			}
+			toast("Minted..");
+			setApproved(txResult.status === 1);
+		} catch (error) {
+			console.log(error);
+			toast("Either not approved or not connected!");
+			setApproved(false);
+		}
+	};
+
+	const metaData = {
+		title: title,
+		artist: artist,
+		year: year,
+		imagePath: imageIPFS,
+	};
 
 	const auth =
 		"Basic " +
@@ -39,9 +82,24 @@ const Mint = () => {
 		}
 	}
 
-	useEffect(() => {
-		getData("QmZR6Lj8wXEUbZTrqzivtpKfDomiYjijrSWtDssufX2axC");
-	}, []);
+	async function saveFile() {
+		// save image
+		let ipfs = await ipfsClient();
+		let image = await ipfs.add(imageURL);
+		setImageIPFS("https://ipfs.io/ipfs/" + image.path);
+		//check ipfs set correclty for image
+		const file = JSON.stringify(metaData);
+		//console.log(file);
+
+		let result = await ipfs.add(file);
+		setNFTPath("https://ipfs.io/ipfs/" + result.path);
+		// pass data to mint.
+		// work out what image path is, set it here then create a new object to parse as a json into new infura call
+		// on success set upload to false and mint to true.
+		// add modal for minting
+	}
+
+	useEffect(() => {}, []);
 	return (
 		<div className="flex h-screen w-screen">
 			<Container>
@@ -62,7 +120,12 @@ const Mint = () => {
 							<div className="flex flex-col justify-between space-y-4 py-2 md:max-w-2xl">
 								<div className="flex text-xl text-white">
 									<div className="border-grey md:text-md flex w-3/4  truncate rounded-xl border py-2 px-6 pl-4 text-white lg:text-lg">
-										<input className="w-full bg-transparent" required />
+										<input
+											className="w-full bg-transparent"
+											required
+											value={title}
+											onChange={(e) => setTitle(e.target.value)}
+										/>
 									</div>
 								</div>
 								<div className="flex items-center justify-center"></div>
@@ -73,7 +136,12 @@ const Mint = () => {
 							<div className="flex flex-col justify-between space-y-4 py-2 md:max-w-2xl">
 								<div className="flex text-xl text-white">
 									<div className="border-grey md:text-md flex w-3/4   truncate rounded-xl border py-2 px-6 pl-4 text-white lg:text-lg">
-										<input className="w-full bg-transparent" required />
+										<input
+											className="w-full bg-transparent"
+											required
+											value={artist}
+											onChange={(e) => setArtist(e.target.value)}
+										/>
 									</div>
 								</div>
 							</div>
@@ -87,6 +155,8 @@ const Mint = () => {
 											className="w-full bg-transparent"
 											required
 											type="number"
+											value={year}
+											onChange={(e) => setYear(parseInt(e.target.value))}
 										/>
 									</div>
 								</div>
@@ -95,24 +165,29 @@ const Mint = () => {
 								<input
 									className="pt-4"
 									type="file"
-									name="myImage"
 									required
 									onChange={(event) => {
 										// @ts-ignore: Object is possibly 'null'.
-										console.log(event.target.files[0]);
-										// @ts-ignore: Object is possibly 'null'.
 										setImageUrl(event.target.files[0]);
-										setSelectedImage(true);
 									}}
 								/>
 							</div>
 
 							<div className="pt-4">
-								{selectedImage ? (
+								{imageURL ? (
 									<>
 										<button
 											className=" pt-4flex h-[50px] w-full max-w-[166px] items-center justify-center rounded-xl border border-white text-white transition-colors duration-300 hover:bg-white hover:text-black"
-											onClick={saveImage}
+											onClick={() => {
+												if (
+													metaData.artist === "" ||
+													metaData.title === "" ||
+													metaData.year === 0
+												) {
+													toast.error("Please Fill in all fields");
+												}
+												saveFile();
+											}}
 										>
 											Upload
 										</button>
@@ -120,9 +195,21 @@ const Mint = () => {
 								) : null}
 							</div>
 							<div className="pt-4">
-								{uploadImage ? (
+								{nftPath ? (
 									<>
-										<button className=" pt-4flex h-[50px] w-full max-w-[166px] items-center justify-center rounded-xl border border-white text-white transition-colors duration-300 hover:bg-white hover:text-black">
+										<button
+											className=" pt-4flex h-[50px] w-full max-w-[166px] items-center justify-center rounded-xl border border-white text-white transition-colors duration-300 hover:bg-white hover:text-black"
+											onClick={() => {
+												if (nftPath === "") {
+													toast.error(
+														"Something wen't wrong with the upload process, please try again."
+													);
+												}
+												console.log(metaData);
+												console.log(nftPath);
+												mint();
+											}}
+										>
 											Mint
 										</button>
 									</>
