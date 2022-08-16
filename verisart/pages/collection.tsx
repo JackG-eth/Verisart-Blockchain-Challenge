@@ -55,7 +55,7 @@ const Collection = () => {
 	return (
 		<div>
 			<div>
-				<h1 className="text-mycelium-lightgreen pt-24 text-center md:text-7xl lg:leading-tight">
+				<h1 className=" pt-24 text-center md:text-7xl lg:leading-tight">
 					Verisart Collection
 				</h1>
 			</div>

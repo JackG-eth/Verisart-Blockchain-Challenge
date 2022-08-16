@@ -9,7 +9,6 @@ const Logo: React.FC<{
 			<img
 				className="logo-primary cursor-pointer bg-white"
 				src="verisart.svg"
-				alt="Mycelium logo"
 			/>
 		</Link>
 	);

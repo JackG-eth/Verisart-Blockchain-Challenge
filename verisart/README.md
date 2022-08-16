@@ -6,6 +6,15 @@ First, run the development server:
 
 ```bash
 npm run dev
+
+
+--- NOTE
+    YOU will have to create a .evn.local file and provide the correct API Keys if you wish to runn this locally
+        INFURA_ID=
+        SECRET_KEY=
+        ALCHEMY_KEY=
+
+
 # or
 yarn dev
 ```

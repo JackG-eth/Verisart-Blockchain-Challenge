@@ -42,7 +42,7 @@ const Header: React.FC<{
 				}}
 			>
 				<small
-					className={`block w-full text-[16px] leading-7 text-mycelium-lightgreen ${
+					className={`block w-full text-[16px] leading-7  ${
 						fullWidthSubheading ? "max-w-[720px]" : "xl:max-w-[440px]"
 					}`}
 				>

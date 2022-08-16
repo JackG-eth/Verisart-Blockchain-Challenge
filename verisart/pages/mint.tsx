@@ -91,6 +91,9 @@ const Mint = () => {
 		console.log(file);
 		let result = await ipfs.add(file);
 		setNFTPath("https://ipfs.io/ipfs/" + result.path);
+		if (result) {
+			setImageIPFS("");
+		}
 	}
 
 	useEffect(() => {}, []);
@@ -102,7 +105,7 @@ const Mint = () => {
 						<div className="mr-40">
 							<div className="mr-10 flex flex-col space-y-3">
 								<div className="justify-left flex">
-									<h1 className="text-mycelium-lightgreen pt-24 md:text-7xl lg:leading-tight">
+									<h1 className=" pt-24 md:text-7xl lg:leading-tight">
 										Upload Artwork
 									</h1>
 								</div>
