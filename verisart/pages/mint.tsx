@@ -31,7 +31,7 @@ const Mint = () => {
 			// Change this to the contract that is doing the swapping/burning
 			console.log(nftPath);
 			console.log(address);
-			const mint = await contract.mint(address, nftPat);
+			const mint = await contract.mint(address, nftPath);
 			const txResult = await mint.wait();
 			if (txResult.status !== 1) {
 				throw new Error("Failed approve");
@@ -71,32 +71,27 @@ const Mint = () => {
 		return ipfs;
 	}
 
-	async function getData(hash: string) {
-		let ipfs = await ipfsClient();
-
-		let asyncitr = ipfs.get(hash);
-
-		for await (const itr of asyncitr) {
-			let data = Buffer.from(itr).toString();
-			console.log(data);
-		}
-	}
-
-	async function saveFile() {
+	async function uploadImage() {
 		// save image
 		let ipfs = await ipfsClient();
-		let image = await ipfs.add(imageURL);
+		const image = await ipfs.add(imageURL);
 		setImageIPFS("https://ipfs.io/ipfs/" + image.path);
+		setImageUrl("");
 		//check ipfs set correclty for image
-		const file = JSON.stringify(metaData);
-		//console.log(file);
-
-		let result = await ipfs.add(file);
-		setNFTPath("https://ipfs.io/ipfs/" + result.path);
 		// pass data to mint.
 		// work out what image path is, set it here then create a new object to parse as a json into new infura call
 		// on success set upload to false and mint to true.
 		// add modal for minting
+	}
+
+	async function saveFile() {
+		console.log(imageIPFS);
+		let ipfs = await ipfsClient();
+		const file = JSON.stringify(metaData);
+		console.log(file);
+		let result = await ipfs.add(file);
+		setNFTPath("https://ipfs.io/ipfs/" + result.path);
+		setImageIPFS("");
 	}
 
 	useEffect(() => {}, []);
@@ -186,7 +181,7 @@ const Mint = () => {
 												) {
 													toast.error("Please Fill in all fields");
 												}
-												saveFile();
+												uploadImage();
 											}}
 										>
 											Upload
@@ -194,7 +189,28 @@ const Mint = () => {
 									</>
 								) : null}
 							</div>
-							<div className="pt-4">
+							<div>
+								{imageIPFS ? (
+									<>
+										<button
+											className=" pt-4flex h-[50px] w-full max-w-[166px] items-center justify-center rounded-xl border border-white text-white transition-colors duration-300 hover:bg-white hover:text-black"
+											onClick={() => {
+												if (
+													metaData.artist === "" ||
+													metaData.title === "" ||
+													metaData.year === 0
+												) {
+													toast.error("Please Fill in all fields");
+												}
+												saveFile();
+											}}
+										>
+											Upload File
+										</button>
+									</>
+								) : null}
+							</div>
+							<div>
 								{nftPath ? (
 									<>
 										<button
