@@ -181,8 +181,9 @@ const Mint = () => {
 													metaData.year === 0
 												) {
 													toast.error("Please Fill in all fields");
+												} else {
+													uploadImage();
 												}
-												uploadImage();
 											}}
 										>
 											Upload
@@ -202,8 +203,9 @@ const Mint = () => {
 													metaData.year === 0
 												) {
 													toast.error("Please Fill in all fields");
+												} else {
+													saveFile();
 												}
-												saveFile();
 											}}
 										>
 											Upload File
