@@ -16,7 +16,7 @@ const Mint = () => {
 	const [imageURL, setImageUrl] = useState("");
 	const [imageIPFS, setImageIPFS] = useState("");
 	const [nftPath, setNFTPath] = useState("");
-	const [approved, setApproved] = useState(false);
+	const [minted, setMinted] = useState(false);
 
 	const mintContractAddress = "0x02fF80b4A2c4534Ec612cF196d13Cd89dFc51f36";
 
@@ -34,14 +34,14 @@ const Mint = () => {
 			const mint = await contract.mint(address, nftPath);
 			const txResult = await mint.wait();
 			if (txResult.status !== 1) {
-				throw new Error("Failed approve");
+				throw new Error("Failedminted");
 			}
 			toast("Minted..");
-			setApproved(txResult.status === 1);
+			setMinted(txResult.status === 1);
 		} catch (error) {
 			console.log(error);
-			toast("Either not approved or not connected!");
-			setApproved(false);
+			toast("Either notmintedd or not connected!");
+			setMinted(false);
 		}
 	};
 
@@ -103,7 +103,7 @@ const Mint = () => {
 						<div className="mr-40">
 							<div className="mr-10 flex flex-col space-y-3">
 								<div className="justify-left flex">
-									<h1 className="text-mycelium-lightgreen md:text-7xl lg:leading-tight">
+									<h1 className="text-mycelium-lightgreen pt-24 md:text-7xl lg:leading-tight">
 										Upload Artwork
 									</h1>
 								</div>
@@ -235,6 +235,22 @@ const Mint = () => {
 								) : null}
 							</div>
 						</div>
+						{minted ? (
+							<>
+								<div className="flex-rows-2 flex items-start">
+									<div className="justify-left items-center text-center">
+										{true ? (
+											<>
+												<span className="flex h-screen items-center justify-center text-center text-lg text-white">
+													Congratulations on successfully minting your NFT!
+													<br></br>View it in the collections Tab.
+												</span>
+											</>
+										) : null}
+									</div>
+								</div>
+							</>
+						) : null}
 					</div>
 				</div>
 			</Container>

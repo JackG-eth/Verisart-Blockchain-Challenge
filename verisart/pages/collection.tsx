@@ -1,16 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { NftExcludeFilters, Alchemy, Network } from "alchemy-sdk";
 import { useWeb3Context } from "../context/";
+import Container from "../components/General/Container/Container";
 import { copyFileSync } from "fs";
 
 const Collection = () => {
-	const list:
-		| [{}]
-		| { id: string; title: any; artist: any; year: any; imagePath: any }[] = [];
-	const [fetched, setNfts] = useState(false);
-	let perm:
-		| [{}]
-		| { id: string; title: any; artist: any; year: any; imagePath: any }[] = [];
+	const [permList, setPerm] = useState([{}]);
+
+	const list: any = [];
+	let perm: any = [];
 
 	const config = {
 		apiKey: process.env.ALCHEMY_KEY,
@@ -21,8 +19,7 @@ const Collection = () => {
 
 	async function getList() {
 		perm = await nfts();
-		setNfts(true);
-		console.log(perm);
+		setPerm(perm);
 	}
 
 	const nfts = async () => {
@@ -48,25 +45,47 @@ const Collection = () => {
 		return list;
 	};
 
+	useEffect(() => {
+		if (address != null) {
+			getList();
+		}
+		console.log(address, "- Has changed");
+	}, [address]); // <-- here put the parameter to listen
+
 	return (
-		<div className="flex h-screen items-center justify-center text-center text-lg text-white">
+		<div>
 			<div>
-				<button onClick={getList}>Fetch Next Page</button>
+				<h1 className="text-mycelium-lightgreen pt-24 text-center md:text-7xl lg:leading-tight">
+					Verisart Collection
+				</h1>
 			</div>
-			<div>
-				{list.length > 0 ? (
-					<>
-						{console.log(perm)}
-						{perm.map((nft: any) => {
-							return (
-								<div key={nft.id}>
-									<h2>id: {nft.title}</h2>
-									<hr />
-								</div>
-							);
-						})}
-					</>
-				) : null}
+			<div className="flex items-center justify-center text-center">
+				<div className="grid grid-cols-3 p-12">
+					{permList ? (
+						<>
+							{permList.map((nft: any) => {
+								return (
+									<div className="pt-4 ">
+										<Container>
+											<div
+												className=" rounded-lg border-2 border-white p-1"
+												key={nft.id}
+											>
+												<img
+													className="h-48 w-48 rounded-lg object-scale-down p-4"
+													src={nft.imagePath}
+												></img>
+												<h2>Title: {nft.title}</h2>
+												<h2>Artist {nft.artist}</h2>
+												<h2>Year {nft.year}</h2>
+											</div>
+										</Container>
+									</div>
+								);
+							})}
+						</>
+					) : null}
+				</div>
 			</div>
 		</div>
 	);

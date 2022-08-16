@@ -43,7 +43,7 @@ const Navbar = () => {
 			to: "/mint",
 		},
 		{
-			label: "Collection",
+			label: "Verisart Collection",
 			to: "/collection",
 		},
 	];
