@@ -18,7 +18,7 @@ const Mint = () => {
 	const [nftPath, setNFTPath] = useState("");
 	const [minted, setMinted] = useState(false);
 
-	const mintContractAddress = "0x02fF80b4A2c4534Ec612cF196d13Cd89dFc51f36";
+	const mintContractAddress = "0x4dE3d62375fAe6CfDBdAFD15aDAB2dd98cBce084";
 
 	const mint = async () => {
 		try {
@@ -91,7 +91,6 @@ const Mint = () => {
 		console.log(file);
 		let result = await ipfs.add(file);
 		setNFTPath("https://ipfs.io/ipfs/" + result.path);
-		setImageIPFS("");
 	}
 
 	useEffect(() => {}, []);

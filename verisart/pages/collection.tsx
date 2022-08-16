@@ -65,12 +65,9 @@ const Collection = () => {
 						<>
 							{permList.map((nft: any) => {
 								return (
-									<div className="pt-4 ">
+									<div key={nft.id} className="pt-4 ">
 										<Container>
-											<div
-												className=" rounded-lg border-2 border-white p-1"
-												key={nft.id}
-											>
+											<div className=" rounded-lg border-2 border-white p-1">
 												<img
 													className="h-48 w-48 rounded-lg object-scale-down p-4"
 													src={nft.imagePath}
