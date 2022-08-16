@@ -4,9 +4,13 @@ import { useWeb3Context } from "../context/";
 import { copyFileSync } from "fs";
 
 const Collection = () => {
-	const list: [{}] = [{}];
+	const list:
+		| [{}]
+		| { id: string; title: any; artist: any; year: any; imagePath: any }[] = [];
 	const [fetched, setNfts] = useState(false);
-	let perm: [{}] = [{}];
+	let perm:
+		| [{}]
+		| { id: string; title: any; artist: any; year: any; imagePath: any }[] = [];
 
 	const config = {
 		apiKey: process.env.ALCHEMY_KEY,
@@ -14,6 +18,12 @@ const Collection = () => {
 	};
 	const alchemy = new Alchemy(config);
 	const { address } = useWeb3Context();
+
+	async function getList() {
+		perm = await nfts();
+		setNfts(true);
+		console.log(perm);
+	}
 
 	const nfts = async () => {
 		const stringAdd: string = address ? address : "";
@@ -35,22 +45,18 @@ const Collection = () => {
 			list.push(metaData);
 		}
 
-		if (list.length > 1) {
-			perm = list;
-			console.log(perm);
-		}
-		// Print NFTs
-		//console.log(nftList[0].rawMetadata);
+		return list;
 	};
 
 	return (
 		<div className="flex h-screen items-center justify-center text-center text-lg text-white">
 			<div>
-				<button onClick={nfts}>Fetch Next Page</button>
+				<button onClick={getList}>Fetch Next Page</button>
 			</div>
 			<div>
-				{perm.length > 1 ? (
+				{list.length > 0 ? (
 					<>
+						{console.log(perm)}
 						{perm.map((nft: any) => {
 							return (
 								<div key={nft.id}>
