@@ -164,6 +164,7 @@ const Mint = () => {
 									onChange={(event) => {
 										// @ts-ignore: Object is possibly 'null'.
 										setImageUrl(event.target.files[0]);
+										setImageIPFS("");
 									}}
 								/>
 							</div>
