@@ -85,9 +85,6 @@ const Mint = () => {
 		console.log(file);
 		let result = await ipfs.add(file);
 		setNFTPath("https://ipfs.io/ipfs/" + result.path);
-		if (result) {
-			setImageIPFS("");
-		}
 	}
 
 	useEffect(() => {}, []);
@@ -209,7 +206,7 @@ const Mint = () => {
 									</>
 								) : null}
 							</div>
-							<div>
+							<div className="pt-4">
 								{nftPath ? (
 									<>
 										<button
