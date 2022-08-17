@@ -89,7 +89,7 @@ const Mint = () => {
 
 	useEffect(() => {}, []);
 	return (
-		<div className="flex h-screen w-screen">
+		<div className="flex h-screen w-screen bg-black">
 			<Container>
 				<div className="cols-2 grid h-screen w-screen">
 					<div className="p flex w-2/4 items-start">

@@ -15,7 +15,7 @@ const Main = () => {
 	}, []);
 
 	return (
-		<section ref={Main} className="relative h-screen">
+		<section ref={Main} className="relative h-screen bg-black">
 			<div
 				id="home"
 				className="relative flex h-screen w-screen min-w-[320px] flex-col items-center justify-center "

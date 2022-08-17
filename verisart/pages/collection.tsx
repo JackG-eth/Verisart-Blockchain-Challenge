@@ -51,7 +51,7 @@ const Collection = () => {
 	}, [address]); // <-- here put the parameter to listen
 
 	return (
-		<div>
+		<div className="bg-black">
 			<div>
 				<h1 className=" pt-24 text-center md:text-7xl lg:leading-tight">
 					Your Collection
