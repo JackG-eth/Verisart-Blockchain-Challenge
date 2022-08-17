@@ -74,7 +74,7 @@ const Mint = () => {
 	async function uploadImage() {
 		let ipfs = await ipfsClient();
 		const image = await ipfs.add(imageURL);
-		setImageIPFS("https://ipfs.io/ipfs/" + image.path);
+		setImageIPFS("https://verisart.infura-ipfs.io/ipfs/" + image.path);
 		setImageUrl("");
 	}
 
